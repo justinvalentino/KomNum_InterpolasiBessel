@@ -37,19 +37,15 @@ class InterpolationSolver:
     
     def Bessel_Delta(self, x0):
         idx = self.x_values.index(x0)
-        
-        # Δf₀
+
         delta_f0 = self.delta.get((idx, 1), 0)
-        
-        # Δ²f
+
         delta2_f = self.delta.get((idx, 2), 0)
         delta2_f_minus1 = self.delta.get((idx-1, 2), 0)
         avg_delta2_f = (delta2_f_minus1 + delta2_f) / 2
-        
-        # Δ³f₋₁
+
         delta3_f_minus1 = self.delta.get((idx-1, 3), 0)
-        
-        # Δ⁴f
+
         delta4_f_minus2 = self.delta.get((idx-2, 4), 0)
         delta4_f_minus1 = self.delta.get((idx-1, 4), 0)
         avg_delta4_f = (delta4_f_minus2 + delta4_f_minus1) / 2
@@ -70,7 +66,6 @@ def bessel_terms(x, x0, h, f0, delta_f0, delta2_f, delta3_f_minus1, delta4_f0, f
     
     return term1, term2, term3, term4, term5, f_interp, E_t
 
-# Data dari soal
 data = {
     2: -940,
     4: -6008,
@@ -91,21 +86,17 @@ print()
 
 solver = InterpolationSolver(data)
 
-# Print tabel
 solver.Tabel_data()
 print()
 
-# Data input untuk Bessel interpolation
 x = 11
 x0 = 10
 h = 2
 f0 = 74020
 f_actual = 154418
 
-# Delta yang akan dicari untuk bessel
 delta_f0, avg_delta2_f, delta3_f_minus1, avg_delta4_f = solver.Bessel_Delta(x0)
 
-# Hitung terms
 t1, t2, t3, t4, t5, result, error = bessel_terms(
     x, x0, h, f0, delta_f0, avg_delta2_f, delta3_f_minus1, avg_delta4_f, f_actual
 )
@@ -114,11 +105,11 @@ print("=== HASIL INTERPOLASI BESSEL ===")
 print(f"Term 1 (f0): {t1}")
 print(f"Term 2 (s * Δf0): {t2}")
 print(f"Term 3 (s(s-1)/2 * Δ²f0_avg): {t3}")
-print(f"Term 4 (1/3 * s(s-1)/2 * (s - 1/2) * Δ³f-1): {t4}")
+print(f"Term 4 (1/3 * s(s-1)/2 * (x - 1/2) * Δ³f-1): {t4}")
 print(f"Term 5 (s(s-1)(s-2)(s-1/2)/24 * Δ⁴f0_avg): {t5}")
 print(f"\nHasil interpolasi Bessel untuk f({x}) dengan x0={x0}: {int(result)}")
 print(f"Nilai sebenarnya: {f_actual}")
-print(f"Galat ET: {error:.2f}%")
+print(f"ET: {error:.2f}%")
 
 print("\n=== DETAIL PERHITUNGAN ===")
 s = (x - x0) / h
